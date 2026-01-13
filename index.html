@@ -103,10 +103,22 @@
         h1 { font-size: 2.2rem; margin: 0; text-transform: uppercase; }
         .tagline { font-weight: 700; font-size: 1rem; margin: 10px 0; line-height: 1.4; padding: 0 20px; }
 
+        /* --- UPDATED SOCIAL LINKS --- */
         .social-links { display: flex; justify-content: center; gap: 15px; margin: 20px 0; }
+        
         .social-links a { 
-            color: var(--f1-red); font-size: 1.6rem; transition: transform 0.2s; display: inline-block;
+            color: var(--f1-red); 
+            font-size: 1.6rem; 
+            display: inline-block;
+            /* Smooth transition for both scale and color */
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.3s ease;
             animation: wiggle 4s ease-in-out infinite;
+        }
+
+        .social-links a:hover {
+            color: #000000;          /* Change to Black */
+            transform: scale(1.4);    /* Pop Out Effect */
+            animation: none;          /* Stop wiggle on hover for clarity */
         }
 
         @keyframes wiggle {
@@ -116,6 +128,7 @@
             96% { transform: rotate(7deg); }
             98% { transform: rotate(-7deg); }
         }
+        /* --- END UPDATED SOCIAL LINKS --- */
 
         .section { padding: 10px 0; width: 90%; display: flex; flex-direction: column; align-items: center; }
 
@@ -302,7 +315,6 @@
 <div id="backToTop" onclick="scrollToTop()"><i class="fa-solid fa-chevron-up"></i></div>
 
 <script>
-    // LOADER SCRIPT - ADJUSTED TIMING FOR BEEP.MP3
     function startRaceSequence() {
         const beep = document.getElementById('beep-sound');
         const startEngine = document.getElementById('start-sound');
@@ -312,18 +324,15 @@
         btn.style.display = 'none';
         msg.innerText = "Lights Out and Away We Go!";
         
-        // Start the MP3 immediately
         beep.play();
 
         let count = 1;
-        // Adjusted to 1000ms to match the 1-second interval of the shared file
         const interval = setInterval(() => {
             if(count <= 5) {
                 document.getElementById('l' + count).classList.add('red');
                 count++;
             } else {
                 clearInterval(interval);
-                // Tension wait after all 5 lights are on
                 setTimeout(() => {
                     if(startEngine) startEngine.play();
                     document.getElementById('loader').style.opacity = '0';
@@ -337,7 +346,6 @@
         }, 1000); 
     }
 
-    // SPEEDOMETER & PROGRESS SCRIPT
     let lastScroll = 0;
     window.onscroll = function() {
         const btt = document.getElementById("backToTop");
