@@ -6,7 +6,6 @@
     <title>SLH._.44 | F1 Editor</title>
     
     <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400;700&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
@@ -16,127 +15,215 @@
             --text-dark: #333;
         }
 
+        /* FULL-WIDTH RACE START LOADING SCREEN */
+        #loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url("background.jpeg");
+            background-size: cover; background-position: center;
+            z-index: 10000; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; transition: opacity 0.8s ease-out;
+        }
+        .lights-container { display: flex; gap: 15px; margin-bottom: 20px; }
+        .light { width: 45px; height: 45px; background: #222; border-radius: 50%; border: 4px solid #000; transition: 0.1s; }
+        .light.red { background: var(--f1-red); box-shadow: 0 0 30px var(--f1-red); }
+        
+        .loader-text { 
+            color: white; 
+            font-weight: bold; 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            font-family: 'DynaPuff', cursive; 
+            margin-bottom: 20px; 
+            text-align: center;
+        }
+
+        #start-race-btn {
+            padding: 15px 30px; background: var(--f1-red); color: white; border: none;
+            border-radius: 50px; font-family: 'DynaPuff'; font-weight: bold; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 1px; transition: 0.3s;
+        }
+        #start-race-btn:hover { transform: scale(1.1); background: white; color: var(--f1-red); }
+
+        #speedo-box {
+            position: fixed; bottom: 20px; left: 20px; background: rgba(0,0,0,0.8);
+            color: white; padding: 10px; border-radius: 8px; border-left: 4px solid var(--f1-red);
+            font-family: monospace; z-index: 999; min-width: 80px; text-align: center;
+        }
+        #speed-val { font-size: 1.5rem; display: block; }
+        .unit { font-size: 0.6rem; color: #aaa; }
+
+        #team-radio {
+            position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%);
+            background: #222; color: #fff; padding: 12px 20px; border-radius: 50px;
+            display: flex; align-items: center; gap: 12px; border: 1px solid #444;
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 999;
+            width: 90%; max-width: 350px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        #team-radio.show { bottom: 80px; }
+        .radio-icon { color: #00ff00; animation: blink 1s infinite; }
+
+        @media (min-width: 1024px) {
+            body { cursor: url('https://img.icons8.com/ios-filled/32/e10600/f1-wheel.png'), auto; }
+            a, button, .follow-btn, .video-wrapper, .grid-item { cursor: url('https://img.icons8.com/ios-filled/32/000000/f1-wheel.png'), pointer !important; }
+        }
+
+        #progress-container { position: fixed; top: 0; left: 0; width: 100%; height: 4px; background: transparent; z-index: 9999; }
+        #progress-bar { height: 100%; background: var(--f1-red); width: 0%; transition: width 0.1s ease-out; }
+
         body {
-            margin: 0;
-            padding: 0;
+            margin: 0; padding: 0;
             font-family: 'DynaPuff', system-ui;
-            background-color: #f0f0f0; /* Light gray outer background */
+            background-color: #f0f0f0; 
             color: var(--f1-red);
-            display: flex;
-            justify-content: center;
+            display: flex; justify-content: center;
+            overflow: hidden; 
         }
 
         .container {
-            width: 100%;
-            max-width: 450px;
+            width: 100%; max-width: 450px;
             background: var(--bg-cream);
             min-height: 100vh;
             text-align: center;
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
+            display: flex; flex-direction: column;
+            align-items: center; position: relative;
+            overflow-x: hidden;
         }
 
-        /* Header Section */
         header {
-            background: linear-gradient(to bottom, rgba(0,0,0,0.2), var(--bg-cream)), 
-                        url("background.jpeg"); 
-            background-size: cover;
-            background-position: center;
-            padding: 40px 20px 20px;
+            width: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.2), var(--bg-cream)), url("background.jpeg"); 
+            background-size: cover; background-position: center;
+            padding: 40px 0 20px;
+            display: flex; flex-direction: column; align-items: center;
         }
 
-        .profile-pic {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 3px solid #fff;
-            object-fit: cover;
-            margin-bottom: 15px;
-            background-color: #000;
-        }
+        .profile-pic { width: 120px; height: 120px; border-radius: 50%; border: 3px solid #fff; object-fit: cover; margin-bottom: 15px; background-color: #000; }
 
         h1 { font-size: 2.2rem; margin: 0; text-transform: uppercase; }
-        .tagline { font-weight: 700; font-size: 1rem; margin: 10px 0; line-height: 1.4; }
+        .tagline { font-weight: 700; font-size: 1rem; margin: 10px 0; line-height: 1.4; padding: 0 20px; }
 
-        /* Social Icons */
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin: 20px 0;
+        .social-links { display: flex; justify-content: center; gap: 15px; margin: 20px 0; }
+        .social-links a { 
+            color: var(--f1-red); font-size: 1.6rem; transition: transform 0.2s; display: inline-block;
+            animation: wiggle 4s ease-in-out infinite;
         }
 
-        .social-links a {
-            color: var(--f1-red);
-            font-size: 1.6rem;
-            transition: transform 0.2s;
+        @keyframes wiggle {
+            0%, 90%, 100% { transform: rotate(0deg); }
+            92% { transform: rotate(10deg); }
+            94% { transform: rotate(-10deg); }
+            96% { transform: rotate(7deg); }
+            98% { transform: rotate(-7deg); }
         }
 
-        .social-links a:hover { transform: scale(1.2); }
+        .section { padding: 10px 0; width: 90%; display: flex; flex-direction: column; align-items: center; }
 
-        /* Content Sections */
-        .section { padding: 20px 30px; flex-grow: 1; }
-        h2 { font-size: 1.4rem; margin-bottom: 15px; }
-        .about-text { font-weight: 700; font-size: 1.1rem; line-height: 1.4; margin-bottom: 10px; }
-        .sub-text { font-size: 0.95rem; line-height: 1.5; opacity: 0.9; }
+        .about-card {
+            width: 100%; background-color: var(--f1-red); color: white;
+            padding: 35px 20px 25px; border-radius: 12px; margin: 10px 0 20px; text-align: center; position: relative;
+            overflow: hidden; box-shadow: 0 4px 15px rgba(225, 6, 0, 0.2); box-sizing: border-box;
+        }
+        .checkered-top { position: absolute; top: 0; left: 0; width: 100%; height: 10px; background-image: conic-gradient(#000 25%, #eee 25%, #eee 75%, #000 75%, #000); background-size: 10px 10px; opacity: 0.8; }
 
-        hr { border: none; border-top: 1px solid rgba(225, 6, 0, 0.1); margin: 20px 0; }
+        .video-header { font-size: 1.1rem; font-weight: 700; text-transform: uppercase; margin: 20px 0 10px 0; display: flex; align-items: center; gap: 10px; color: var(--text-dark); }
+        .live-dot { height: 10px; width: 10px; background-color: var(--f1-red); border-radius: 50%; display: inline-block; animation: blink 1.5s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+        .video-wrapper {
+            position: relative; width: 100%; border-radius: 15px; overflow: hidden;
+            background: #000; margin-bottom: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+        }
+        video { width: 100%; display: block; }
+
+        .play-overlay {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 80px; height: 80px; background: white; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3); transition: 0.3s; z-index: 10;
+        }
+        .play-overlay i { font-size: 2.5rem; color: var(--f1-red); margin-left: 5px; }
+        .video-wrapper.playing .play-overlay { display: none; }
+
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; margin-top: 10px; padding-bottom: 30px; }
+        .grid-item { position: relative; width: 100%; aspect-ratio: 1 / 1; border-radius: 8px; overflow: hidden; display: block; text-decoration: none; }
+        .grid-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        
+        .grid-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(225, 6, 0, 0.85); display: flex; flex-direction: column;
+            justify-content: center; align-items: center; color: white; opacity: 0; transition: 0.3s;
+        }
+        .grid-overlay i { font-size: 1.2rem; margin-bottom: 5px; }
+        .grid-overlay span { font-size: 0.7rem; font-weight: bold; text-transform: uppercase; }
+
+        .grid-item:hover .grid-overlay { opacity: 1; }
+        .grid-item:hover img { transform: scale(1.1); }
+
+        .new-badge {
+            position: absolute; top: 5px; right: 5px;
+            background: var(--f1-red); color: white;
+            font-size: 0.6rem; font-weight: bold; padding: 2px 6px;
+            border-radius: 4px; text-transform: uppercase;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 5;
+        }
+
+        hr { border: none; border-top: 1px solid rgba(225, 6, 0, 0.1); margin: 20px auto; width: 80%; }
 
         .follow-btn {
-            background-color: var(--f1-red);
-            color: white;
-            display: block;
-            text-decoration: none;
-            padding: 15px;
-            border-radius: 12px;
-            text-transform: uppercase;
-            font-size: 1.2rem;
-            margin: 20px 0;
-            transition: opacity 0.3s;
+            background-color: var(--f1-red); color: white; display: inline-block; text-decoration: none;
+            padding: 15px 50px; border-radius: 12px; text-transform: uppercase; font-size: 1.2rem; margin: 20px 0;
+            transition: 0.3s; font-weight: bold;
         }
+        .follow-btn:hover { background-color: #000; transform: scale(1.05); }
 
-        .follow-btn:hover { opacity: 0.9; }
-
-        .insta-feed-header {
-            display: flex;
-            align-items: center;
-            padding: 10px 20px;
-            text-align: left;
-        }
-
+        .insta-feed-header { display: flex; align-items: center; padding: 10px 0; text-align: left; width: 100%; box-sizing: border-box; }
         .mini-avatar { width: 40px; height: 40px; border-radius: 50%; margin-right: 10px; }
-        .insta-handle { font-weight: bold; font-size: 0.9rem; }
+        .insta-handle { font-weight: bold; font-size: 0.9rem; color: var(--text-dark); }
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2px;
-            padding: 0 2px;
+        .custom-footer { background-color: #1a1a1a; color: #ffffff; padding: 30px 20px; margin-top: auto; width: 100%; box-sizing: border-box; }
+        .footer-text { font-family: 'DynaPuff', cursive; font-size: 0.8rem; opacity: 0.7; }
+
+        #backToTop {
+            position: fixed; bottom: 20px; right: 20px; background-color: var(--f1-red); color: white;
+            width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            opacity: 0; transition: 0.3s; z-index: 1000; cursor: pointer;
         }
-
-        .grid img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; }
-
-        /* NEW CUSTOM FOOTER */
-        .custom-footer {
-            background-color: #1a1a1a;
-            color: #ffffff;
-            padding: 30px 20px;
-            margin-top: 40px;
-            font-family: 'Inter', sans-serif; /* Clean font for legal text */
-        }
-
-        .footer-text {
-	    font-family: 'DynaPuff', cursive;
-            font-size: 0.8rem;
-            opacity: 0.7;
-            line-height: 1.6;
-        }
-
-
+        #backToTop.show { opacity: 1; }
     </style>
 </head>
 <body>
+
+<audio id="beep-sound" src="beep.mp3" preload="auto"></audio>
+<audio id="start-sound" src="engine.mp3" preload="auto"></audio>
+
+<div id="loader">
+    <div class="lights-container">
+        <div class="light" id="l1"></div>
+        <div class="light" id="l2"></div>
+        <div class="light" id="l3"></div>
+        <div class="light" id="l4"></div>
+        <div class="light" id="l5"></div>
+    </div>
+    <div class="loader-text" id="loader-msg">Check Your Radar...</div>
+    <button id="start-race-btn" onclick="startRaceSequence()">Ready to Race</button>
+</div>
+
+<div id="speedo-box">
+    <span id="speed-val">0</span>
+    <span class="unit">KM/H</span>
+</div>
+
+<div id="team-radio">
+    <i class="fa-solid fa-tower-broadcast radio-icon"></i>
+    <div style="font-size: 0.8rem; line-height: 1.2; text-align: left;">
+        <strong style="color: var(--f1-red);">RADIO SLH:</strong><br>
+        "Box box! Follow for more edits."
+    </div>
+</div>
+
+<div id="progress-container"><div id="progress-bar"></div></div>
 
 <div class="container">
     <header>
@@ -145,51 +232,141 @@
         <p class="tagline">F1 Editor | F1 edits that hit faster than<br>a pit stop</p>
         
         <div class="social-links">
-            <a href="https://www.instagram.com/slh._.44?igsh=dDVrMTg0b3IzMXk0" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-instagram"></i></a>
-            <a href="https://www.tiktok.com/@slh._44" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-tiktok"></i></a>
-            <a href="https://www.threads.net/@slh._.44" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-threads"></i></a>
-            <a href="https://www.facebook.com/profile.php?id=61585311726470" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-facebook"></i></a>
-            <a href="https://youtube.com/@slh._.44_edits" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-youtube"></i></a>
+            <a href="https://www.instagram.com/slh._.44?igsh=dDVrMTg0b3IzMXk0" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://www.tiktok.com/@slh._44" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+            <a href="https://www.threads.net/@slh._.44" target="_blank"><i class="fa-brands fa-threads"></i></a>
+            <a href="https://www.facebook.com/profile.php?id=61585311726470" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+            <a href="https://youtube.com/@slh._.44_edits" target="_blank"><i class="fa-brands fa-youtube"></i></a>
         </div>
     </header>
 
     <div class="section">
-        <h2>About Me</h2>
-        <p class="about-text">Hey, I'm an F1 fan and editor, creating cinematic race edits and fan content.</p>
-        <p class="sub-text">I love capturing the speed, drama, and thrill of Formula 1 and sharing it with fellow fans. Follow along for high-octane edits, race highlights, and all things F1!</p>
+        <div class="about-card">
+            <div class="checkered-top"></div>
+            <h2>About Me</h2>
+            <p class="about-text">Hey, I'm an F1 fan and editor, creating cinematic race edits and fan content.</p>
+            <p class="sub-text">I love capturing the speed, drama, and thrill of Formula 1. Follow along for high-octane edits!</p>
+        </div>
+
+        <div class="video-header">
+            <span class="live-dot"></span> Watch My Most Popular Edit
+        </div>
+
+        <div class="video-wrapper" id="videoWrapper" onclick="togglePlay()">
+            <video id="myVideo" loop playsinline poster="thumbnail.jpeg">
+                <source src="my-edit.mp4" type="video/mp4">
+            </video>
+            <div class="play-overlay">
+                <i class="fa-solid fa-play"></i>
+            </div>
+        </div>
 
         <hr>
 
         <div class="insta-cta">
-            <h2>Follow me on Instagram</h2>
-            <p class="sub-text">Discover SLH's cinematic F1 edits, race highlights, and high-speed clips.</p>
-            <a href="https://www.instagram.com/slh._.44?igsh=dDVrMTg0b3IzMXk0" target="_blank" rel="noopener noreferrer" class="follow-btn">Follow</a>
+            <h2 style="margin-bottom: 5px;">Follow on Instagram</h2>
+            <a href="https://www.instagram.com/slh._.44?igsh=dDVrMTg0b3IzMXk0" target="_blank" class="follow-btn">Follow</a>
         </div>
 
         <div class="insta-feed-header">
             <img src="logo.jpg" class="mini-avatar" alt="avatar">
             <div>
                 <div class="insta-handle">@slh._.44</div>
-                <div class="post-count">8 posts</div>
+                <div style="font-size: 0.75rem; color: #666;">8 posts</div>
             </div>
         </div>
 
         <div class="grid">
-            <img src="post1.jpeg">
-            <img src="post2.jpeg">
-            <img src="post3.jpeg">
+            <a href="https://www.instagram.com/reel/DS7MJcpCGI9/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank" class="grid-item">
+                <span class="new-badge">New Edit</span>
+                <img src="post2.jpeg">
+                <div class="grid-overlay"><i class="fa-solid fa-play"></i><span>View</span></div>
+            </a>
+            <a href="https://www.instagram.com/reel/DSRdbKZCHc6/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank" class="grid-item">
+                <img src="post1.jpeg">
+                <div class="grid-overlay"><i class="fa-solid fa-play"></i><span>View</span></div>
+            </a>
+            <a href="https://www.instagram.com/reel/DSxOS-mCCvN/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank" class="grid-item">
+                <img src="post3.jpeg">
+                <div class="grid-overlay"><i class="fa-solid fa-play"></i><span>View</span></div>
+            </a>
         </div>
     </div>
 
     <footer class="custom-footer">
-
         <p class="footer-text">© 2026. Created by SLH._.44</p>
-		<p class="footer-text" style="font-size: 0.6rem; opacity: 0.5;">
-    This site is unofficial and is not associated with the Formula 1 companies.
-</p>
+        <p class="footer-text" style="font-size: 0.6rem; opacity: 0.5;">This site is unofficial and is not associated with Formula 1.</p>
     </footer>
 </div>
 
-</body>
+<div id="backToTop" onclick="scrollToTop()"><i class="fa-solid fa-chevron-up"></i></div>
 
+<script>
+    // LOADER SCRIPT - ADJUSTED TIMING FOR BEEP.MP3
+    function startRaceSequence() {
+        const beep = document.getElementById('beep-sound');
+        const startEngine = document.getElementById('start-sound');
+        const btn = document.getElementById('start-race-btn');
+        const msg = document.getElementById('loader-msg');
+        
+        btn.style.display = 'none';
+        msg.innerText = "Lights Out and Away We Go!";
+        
+        // Start the MP3 immediately
+        beep.play();
+
+        let count = 1;
+        // Adjusted to 1000ms to match the 1-second interval of the shared file
+        const interval = setInterval(() => {
+            if(count <= 5) {
+                document.getElementById('l' + count).classList.add('red');
+                count++;
+            } else {
+                clearInterval(interval);
+                // Tension wait after all 5 lights are on
+                setTimeout(() => {
+                    if(startEngine) startEngine.play();
+                    document.getElementById('loader').style.opacity = '0';
+                    document.body.style.overflow = 'auto';
+                    setTimeout(() => { 
+                        document.getElementById('loader').style.display = 'none';
+                        document.getElementById('team-radio').classList.add('show');
+                    }, 500);
+                }, 1200); 
+            }
+        }, 1000); 
+    }
+
+    // SPEEDOMETER & PROGRESS SCRIPT
+    let lastScroll = 0;
+    window.onscroll = function() {
+        const btt = document.getElementById("backToTop");
+        const pb = document.getElementById("progress-bar");
+        const scrollPos = document.documentElement.scrollTop;
+        
+        const speed = Math.min(Math.abs(scrollPos - lastScroll) * 8, 340);
+        document.getElementById('speed-val').innerText = Math.floor(speed);
+        lastScroll = scrollPos;
+
+        if (scrollPos > 300) { btt.classList.add("show"); } else { btt.classList.remove("show"); }
+        let height = document.documentElement.scrollHeight - window.innerHeight;
+        pb.style.width = (scrollPos / height) * 100 + "%";
+    };
+
+    function togglePlay() {
+        const video = document.getElementById('myVideo');
+        const wrapper = document.getElementById('videoWrapper');
+        if (video.paused) {
+            video.play();
+            wrapper.classList.add('playing');
+        } else {
+            video.pause();
+            wrapper.classList.remove('playing');
+        }
+    }
+
+    function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+</script>
+
+</body>
 </html>
