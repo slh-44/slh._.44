@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SLH._.44 | F1 Editor</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --f1-red: #e10600;
+            --bg-cream: #fdf8f1;
+            --text-dark: #333;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'DynaPuff', system-ui;
+            background-color: #f0f0f0; /* Light gray outer background */
+            color: var(--f1-red);
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+            background: var(--bg-cream);
+            min-height: 100vh;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Section */
+        header {
+            background: linear-gradient(to bottom, rgba(0,0,0,0.2), var(--bg-cream)), 
+                        url("background.jpeg"); 
+            background-size: cover;
+            background-position: center;
+            padding: 40px 20px 20px;
+        }
+
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            object-fit: cover;
+            margin-bottom: 15px;
+            background-color: #000;
+        }
+
+        h1 { font-size: 2.2rem; margin: 0; text-transform: uppercase; }
+        .tagline { font-weight: 700; font-size: 1rem; margin: 10px 0; line-height: 1.4; }
+
+        /* Social Icons */
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .social-links a {
+            color: var(--f1-red);
+            font-size: 1.6rem;
+            transition: transform 0.2s;
+        }
+
+        .social-links a:hover { transform: scale(1.2); }
+
+        /* Content Sections */
+        .section { padding: 20px 30px; flex-grow: 1; }
+        h2 { font-size: 1.4rem; margin-bottom: 15px; }
+        .about-text { font-weight: 700; font-size: 1.1rem; line-height: 1.4; margin-bottom: 10px; }
+        .sub-text { font-size: 0.95rem; line-height: 1.5; opacity: 0.9; }
+
+        hr { border: none; border-top: 1px solid rgba(225, 6, 0, 0.1); margin: 20px 0; }
+
+        .follow-btn {
+            background-color: var(--f1-red);
+            color: white;
+            display: block;
+            text-decoration: none;
+            padding: 15px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            font-size: 1.2rem;
+            margin: 20px 0;
+            transition: opacity 0.3s;
+        }
+
+        .follow-btn:hover { opacity: 0.9; }
+
+        .insta-feed-header {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            text-align: left;
+        }
+
+        .mini-avatar { width: 40px; height: 40px; border-radius: 50%; margin-right: 10px; }
+        .insta-handle { font-weight: bold; font-size: 0.9rem; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+            padding: 0 2px;
+        }
+
+        .grid img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; }
+
+        /* NEW CUSTOM FOOTER */
+        .custom-footer {
+            background-color: #1a1a1a;
+            color: #ffffff;
+            padding: 30px 20px;
+            margin-top: 40px;
+            font-family: 'Inter', sans-serif; /* Clean font for legal text */
+        }
+
+        .footer-text {
+	    font-family: 'DynaPuff', cursive;
+            font-size: 0.8rem;
+            opacity: 0.7;
+            line-height: 1.6;
+        }
+
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <img src="logo.jpg" alt="SLH44 Logo" class="profile-pic">
+        <h1>SLH._.44</h1>
+        <p class="tagline">F1 Editor | F1 edits that hit faster than<br>a pit stop</p>
+        
+        <div class="social-links">
+            <a href="https://www.instagram.com/slh._.44?igsh=dDVrMTg0b3IzMXk0" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://www.tiktok.com/@slh._44" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-tiktok"></i></a>
+            <a href="https://www.threads.net/@slh._.44" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-threads"></i></a>
+            <a href="https://www.facebook.com/profile.php?id=61585311726470" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-facebook"></i></a>
+            <a href="https://youtube.com/@slh._.44_edits" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+    </header>
+
+    <div class="section">
+        <h2>About Me</h2>
+        <p class="about-text">Hey, I'm an F1 fan and editor, creating cinematic race edits and fan content.</p>
+        <p class="sub-text">I love capturing the speed, drama, and thrill of Formula 1 and sharing it with fellow fans. Follow along for high-octane edits, race highlights, and all things F1!</p>
+
+        <hr>
+
+        <div class="insta-cta">
+            <h2>Follow me on Instagram</h2>
+            <p class="sub-text">Discover SLH's cinematic F1 edits, race highlights, and high-speed clips.</p>
+            <a href="https://www.instagram.com/slh._.44?igsh=dDVrMTg0b3IzMXk0" target="_blank" rel="noopener noreferrer" class="follow-btn">Follow</a>
+        </div>
+
+        <div class="insta-feed-header">
+            <img src="logo.jpg" class="mini-avatar" alt="avatar">
+            <div>
+                <div class="insta-handle">@slh._.44</div>
+                <div class="post-count">8 posts</div>
+            </div>
+        </div>
+
+        <div class="grid">
+            <img src="post1.jpeg">
+            <img src="post2.jpeg">
+            <img src="post3.jpeg">
+        </div>
+    </div>
+
+    <footer class="custom-footer">
+
+        <p class="footer-text">© 2026. Created by SLH._.44</p>
+    </footer>
+</div>
+
+</body>
+</html>
